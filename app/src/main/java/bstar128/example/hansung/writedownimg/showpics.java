@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.opengl.Matrix;
@@ -15,15 +18,19 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 
 public class showpics extends Activity implements View.OnClickListener{
     ImageView album;
     Dialog d;
+    EditText phrase;
     private static final int SELECT_PICTURE = 1;
     private String selectedImagePath;
     private  final int REQ_CODE=200;
@@ -34,6 +41,12 @@ public class showpics extends Activity implements View.OnClickListener{
         setContentView(R.layout.showpics);
         album = (ImageView) this.findViewById(R.id.album);
         SelectGallery();
+        Dialog di=new Dialog(this);
+        di.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        di.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        di.setContentView(R.layout.showpics);
+        di.show();
+
     }
 
     private void SelectGallery() {//갤러리 호출
@@ -111,6 +124,10 @@ public class showpics extends Activity implements View.OnClickListener{
 
         }
         SelectGallery();
+        phrase=(EditText)findViewById(R.id.phrase);
+        String str=phrase.getText().toString();
+        TextView lyric=(TextView)findViewById(R.id.completephrase);
+        lyric.setText(str);
     }
 }//앨범사진 띄우기
 
