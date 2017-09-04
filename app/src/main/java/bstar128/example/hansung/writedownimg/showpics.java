@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.opengl.Matrix;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -21,48 +22,68 @@ import android.widget.ImageView;
 import java.io.IOException;
 
 public class showpics extends Activity implements View.OnClickListener{
-    ImageButton start;
     ImageView album;
     Dialog d;
     private static final int SELECT_PICTURE = 1;
     private String selectedImagePath;
+    private  final int REQ_CODE=200;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showpics);
-        start = (ImageButton) this.findViewById(R.id.playbut);
         album = (ImageView) this.findViewById(R.id.album);
+        SelectGallery();
     }
 
     private void SelectGallery() {//갤러리 호출
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-        startActivityForResult(intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(intent,REQ_CODE);
 
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {//경로 체크
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    String name_str=getPath(data.getData());
+                    Bitmap img_bit= MediaStore.Images.Media.getBitmap(getContentResolver(),data.getData());
+                    album.setImageBitmap(img_bit);//이미지가 안떠!!!
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(selectedImageUri);
+                }
             }
         }
-    }
-
-    private String getPath(Uri selectedImageUri) {//이미지 절대 경로
+    public String getPath(Uri selectedImageUri) {//이미지 절대 경로
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor c = managedQuery(selectedImageUri, proj, null, null, null);
         int column_index = c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (c != null) {
-            c.moveToFirst();
-            return c.getString(column_index);
-        }
-        return selectedImageUri.getPath();
 
+            c.moveToFirst();
+            String imgPath=c.getString(column_index);
+            String imgName=imgPath.substring(imgPath.lastIndexOf("/")+1);
+            return imgName;
     }
+
+    private void SendPicture(Intent data){
+        Uri imguri=data.getData();
+        String imagePath=getPath(imguri);
+        ExifInterface exif=null;
+        try{
+            exif=new ExifInterface(imagePath);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 
     public int exifOrientionToDegrees(int exifOriention) {//각도
         if (exifOriention == ExifInterface.ORIENTATION_ROTATE_90) {
