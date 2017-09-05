@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/album"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
+    <EditText
+        android:id="@+id/phrase"
+        android:background="@null"
+        android:gravity="center"
+        android:textColor="#a686ff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textSize="20dp"/>
 
 </RelativeLayout>

@@ -1,14 +1,19 @@
 package bstar128.example.hansung.writedownimg;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Created by HANSUNG on 2017-09-02.
@@ -32,7 +37,9 @@ public class makebg extends Activity{
         win.addContentView(linearLayout,params);
         texting();
         setTitle("글귀 적기기");
-   }
+    }
+
+
 
     private void texting() {
         text=(EditText)findViewById(R.id.phrase);
